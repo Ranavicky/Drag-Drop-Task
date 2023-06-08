@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+ <style>
+   body {
+     background-color: #F5F5F5;
+     font-family: Arial, sans-serif;
+     text-align: center;
+   }
+
+   h1 {
+     color: #009900;
+   }
+
+   .container {
+     width: 240px;
+     height: 550px;
+     padding: 10px;
+     border: 1px solid black;
+     background-color: #FFFFFF;
+     display: inline-block;
+     vertical-align: top;
+     margin: 10px;
+   }
+
+   .item {
+     width: 220px;
+     height: 90px;
+     margin-bottom: 10px;
+     transition: opacity 0.3s, filter 0.3s;
+   }
+
+   .item:hover {
+     opacity: 0.7;
+     cursor: pointer;
+   }
+
+   .item.dragged {
+     opacity: 0.6;
+   }
+
+   .item.dropped {
+     filter: grayscale(100%);
+     opacity: 0.5;
+   }
+
+   p {
+     font-size: 20px;
+     font-weight: bold;
+     margin-top: 20px;
+   }
+
+   .success-message {
+     color: green;
+     font-weight: bold;
+     margin-top: 10px;
+   }
+
+   button {
+     margin-top: 20px;
+   }
+ </style>
+</head>
+
+<body>
+ <h1>Drag and Drop Example</h1>
+
+ <div class="container" id="container1">
+   <img id="drag1"
+     src="images/image3.jpeg"
+     draggable="true"
+     ondragstart="dragStart(event)"
+     class="item">
+   <img id="drag2"
+     src="images/image2.jpeg"
+     draggable="true"
+     ondragstart="dragStart(event)"
+     class="item">
+   <img id="drag3"
+     src="images/image1.jpeg"
+     draggable="true"
+     ondragstart="dragStart(event)"
+     class="item">
+   <img id="drag4"
+     src="images/image4.jpeg"
+     draggable="true"
+     ondragstart="dragStart(event)"
+     class="item">
+   <img id="drag5"
+     src="images/image6.jpeg"
+     draggable="true"
+     ondragstart="dragStart(event)"
+     class="item">
+ </div>
+
+ <div class="container" id="container2"
+   ondrop="dragDrop(event)"
+   ondragover="allowDrop(event)">
+ </div>
+
+ <button onclick="reset()">Reset</button>
+
+ <p id="message"></p>
+
+ <script>
+   function allowDrop(ev) {
+     ev.preventDefault();
+   }
+
+   function dragStart(ev) {
+     ev.dataTransfer.setData("text", ev.target.id);
+     ev.target.classList.add('dragged');
+   }
+
+   function dragDrop(ev) {
+     ev.preventDefault();
+     var data = ev.dataTransfer.getData("text");
+     var item = document.getElementById(data);
+     ev.target.appendChild(item);
+     item.classList.add('dropped');
+     var itemId = data.replace("drag", "");
+     showMessage('Item ' + itemId + ' dropped successfully!');
+   }
+
+   function showMessage(message) {
+     var messageElement = document.getElementById('message');
+     messageElement.textContent = message;
+     messageElement.classList.add('success-message');
+   }
+
+   function reset() {
+     var container1 = document.getElementById('container1');
+     var container2 = document.getElementById('container2');
+     var items = container2.querySelectorAll('.item');
+     items.forEach(function(item) {
+       container1.appendChild(item);
+       item.classList.remove('dropped');
+     });
+     container2.innerHTML = '';
+     var messageElement = document.getElementById('message');
+     messageElement.textContent = '';
+   }
+ </script>
+</body>
+</html>
